@@ -47,7 +47,7 @@
             display: flex; flex-direction: column;
         }
 
-        /* Scrollbar Personalizado (Cross-Browser) */
+        /* Scrollbar Personalizado */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: var(--oro); border-radius: 10px; }
         ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
@@ -555,9 +555,14 @@
                         <h3 style="color:var(--oro); font-family:'Playfair Display'; margin-bottom:20px; text-align: center;">Ubicación</h3>
                         <div style="position:relative; width:100%; height:250px; border-radius:8px; overflow:hidden; border:1px solid var(--glass-border);">
                             <iframe 
-                                style="width:100%; height:100%; filter: grayscale(100%) invert(90%); border:0;" 
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3126.5413000000005!2d-0.127758!3d38.541097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd62052f5c7b6d1b%3A0x6b8f1b1b1b1b1b1b!2sBenidorm%2C%20Alicante!5e0!3m2!1ses!2ses!4v1620000000000!5m2!1ses!2ses" 
-                                allowfullscreen="" loading="lazy">
+                                width="100%" 
+                                height="100%" 
+                                frameborder="0" 
+                                scrolling="no" 
+                                marginheight="0" 
+                                marginwidth="0" 
+                                style="filter: grayscale(100%) invert(90%);"
+                                src="https://maps.google.com/maps?q=Paseo+de+la+Castellana,+47,+03502+Benidorm,+Alicante&t=&z=15&ie=UTF8&iwloc=&output=embed">
                             </iframe>
                         </div>
                         <div style="margin-top:30px; line-height:1.8; color:var(--text-muted); text-align:center;">
@@ -566,7 +571,11 @@
                         </div>
                     </div>
                     <div style="margin-top:30px; border-top:1px solid var(--glass-border); padding-top:20px; text-align:center;">
-                        <p style="font-size:0.9rem; margin-bottom:10px;"><i class="fas fa-phone-alt" style="color:var(--oro); margin-right:10px;"></i> +34 965 00 00 00</p>
+                        <p style="font-size:0.9rem; margin-bottom:10px;">
+                            <a href="tel:+34623618494" style="color: inherit; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--oro)'" onmouseout="this.style.color='inherit'">
+                                <i class="fas fa-phone-alt" style="color:var(--oro); margin-right:10px;"></i> +34 623 61 84 94
+                            </a>
+                        </p>
                         <p style="font-size:0.9rem;"><i class="fas fa-envelope" style="color:var(--oro); margin-right:10px;"></i> acontrabarra@gmail.com</p>
                     </div>
                 </div>
