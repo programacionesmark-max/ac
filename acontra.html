@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta name="description" content="AContraBarra Centro: Una experiencia gastronómica premium en el corazón de Benidorm. Tapas de autor, deportes en vivo y ambiente exclusivo.">
+    <meta name="theme-color" content="#050505">
+    <meta property="og:title" content="AContraBarra Centro | Premium Experience">
+    <meta property="og:description" content="Gastronomía, Deportes y Ambiente Exclusivo en Benidorm.">
+    <meta property="og:image" content="fachada.jpg">
+    <meta property="og:type" content="website">
+    
+    <title>AContraBarra Centro | Premium Experience</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CONFIGURACIÓN MAESTRA (DARK MODE) --- */
+        :root {
+            --bg-body: #050505;
+            --glass-bg: rgba(20, 20, 20, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: 20px;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --oro: #D4AF37;
+            --oro-gradient: linear-gradient(135deg, #D4AF37 0%, #F3E5AB 50%, #D4AF37 100%);
+            --shadow: 0 10px 40px -10px rgba(0,0,0,0.7);
+            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+            --nav-mobile-bg: rgba(15, 15, 15, 0.95);
+        }
+
+        /* Reset & Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; height: 100%; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden; /* Evita scroll en body, lo maneja main/section */
+            display: flex; flex-direction: column;
+        }
+
+        /* Scrollbar Personalizado (Cross-Browser) */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: var(--oro); border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+        * { scrollbar-width: thin; scrollbar-color: var(--oro) transparent; }
+
+        /* Textura de ruido */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 50;
+        }
+
+        /* --- LOADER INICIAL --- */
+        #loader {
+            position: fixed; inset: 0; background: #000; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+        .loader-logo {
+            font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--oro);
+            animation: pulseGold 2s infinite; opacity: 0; transform: translateY(20px);
+            text-align: center;
+        }
+        .loader-bar {
+            width: 0%; height: 2px; background: var(--oro-gradient); margin-top: 20px;
+            transition: width 0.5s ease;
+        }
+        body.loaded #loader { opacity: 0; visibility: hidden; }
+
+        /* --- BACKGROUND ANIMADO --- */
+        .img-fondo-absoluta {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: -2;
+            filter: brightness(0.5) contrast(1.1);
+            transition: transform 0.2s ease-out;
+            opacity: 0.4;
+        }
+
+        /* --- HEADER (PC) --- */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            padding: 20px 40px;
+            background: rgba(var(--bg-body), 0.01);
+            backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; justify-content: space-between; align-items: center;
+            transition: all 0.4s var(--ease-out);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-main);
+            text-decoration: none; letter-spacing: 2px; font-weight: 700;
+            display: flex; flex-direction: column; align-items: flex-start;
+            line-height: 1;
+        }
+        .logo span { font-size: 0.8rem; color: var(--oro); font-style: italic; margin-top: 3px; font-weight: 400; }
+
+        /* --- NAVEGACIÓN --- */
+        nav ul { display: flex; gap: 40px; list-style: none; }
+        
+        .nav-btn {
+            background: none; border: none; color: var(--text-muted); cursor: pointer;
+            text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem; font-weight: 500;
+            padding: 8px 0; position: relative; transition: color 0.3s;
+        }
+        .nav-btn::before {
+            content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 0; height: 1px; background: var(--oro); transition: width 0.3s var(--ease-out);
+        }
+        .nav-btn:hover, .nav-btn.activo { color: var(--text-main); }
+        .nav-btn:hover::before, .nav-btn.activo::before { width: 100%; }
+
+        /* --- MAIN & SECCIONES --- */
+        main { flex: 1; position: relative; width: 100%; max-width: 1400px; margin: 0 auto; height: 100%; }
+
+        section {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
+            display: none; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start;
+            text-align: center;
+            overflow-y: auto; 
+            overflow-x: hidden;
+            padding: 120px 20px 100px 20px; 
+        }
+        section.visible { display: flex; }
+        #inicio { justify-content: center; } 
+
+        .stagger-anim { opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s var(--ease-out) forwards; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .d-1 { animation-delay: 0.1s; } .d-2 { animation-delay: 0.2s; } 
+        .d-3 { animation-delay: 0.3s; } .d-4 { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* --- TYPOGRAPHY --- */
+        .contenido-hero { text-align: center; max-width: 900px; }
+        h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: clamp(2.5rem, 6vw, 6rem); 
+            line-height: 1.05; margin-bottom: 25px; 
+            color: var(--text-main); 
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        h1 span { 
+            background: var(--oro-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-style: italic; padding-right: 10px;
+        }
+        
+        h2 { 
+            font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 4rem); 
+            color: var(--oro); margin-bottom: 5px; font-style: italic; 
+        }
+        .subtitulo { 
+            color: var(--text-muted); text-transform: uppercase; letter-spacing: 4px; 
+            font-size: 0.75rem; margin-bottom: 50px; position: relative; padding-bottom: 15px; 
+            display: inline-block;
+        }
+        .subtitulo::after { 
+            content: '♦'; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); 
+            color: var(--oro); font-size: 10px;
+        }
+
+        /* --- COMPONENTES UI --- */
+        .btn-oro {
+            padding: 18px 50px; background: rgba(212, 175, 55, 0.05); color: var(--oro);
+            border: 1px solid var(--oro); text-transform: uppercase; letter-spacing: 2px; font-weight: 700;
+            cursor: pointer; position: relative; overflow: hidden; transition: 0.4s; font-size: 0.85rem;
+            margin: 0 auto; display: inline-block;
+        }
+        .btn-oro:hover { background: var(--oro); color: #000; box-shadow: 0 0 40px rgba(212, 175, 55, 0.4); transform: translateY(-2px); }
+
+        .glass-panel {
+            background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border); border-radius: 16px;
+            box-shadow: var(--shadow); padding: 40px; width: 100%;
+        }
+
+        /* --- GALERÍAS --- */
+        .galeria-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 20px; 
+            width: 100%; 
+            max-width: 1000px; 
+            margin: 0 auto;
+        }
+        
+        .card-img {
+            position: relative; aspect-ratio: 4/5; border-radius: 8px; overflow: hidden;
+            border: 1px solid var(--glass-border); cursor: pointer; group; width: 100%;
+        }
+        .card-img img { 
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease-out), filter 0.5s; 
+            filter: grayscale(100%);
+        }
+        .card-img:hover img { transform: scale(1.1); filter: grayscale(0%); }
+        .card-overlay {
+            position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex; align-items: flex-end; justify-content: center; padding: 20px;
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .card-img:hover .card-overlay { opacity: 1; }
+        .card-title { color: #fff; font-family: 'Playfair Display'; font-size: 1.4rem; font-style: italic; }
+
+        /* --- DEPORTES (SPORTS) --- */
+        .menu-ligas { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 30px; width: 100%; }
+        .btn-liga {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            color: var(--text-muted); padding: 10px 20px; border-radius: 50px;
+            cursor: pointer; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; transition: 0.3s;
+        }
+        .btn-liga:hover { border-color: var(--text-muted); color: var(--text-main); }
+        .btn-liga.seleccionada { background: var(--oro); color: #000; font-weight: 700; border-color: var(--oro); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
+
+        .tabla-partidos { width: 100%; border-collapse: separate; border-spacing: 0 10px; text-align: left; }
+        .tabla-partidos tr { transition: transform 0.2s; cursor: default; }
+        .tabla-partidos td { padding: 15px; background: rgba(255,255,255,0.03); color: var(--text-main); font-size: 0.9rem; vertical-align: middle; }
+        .tabla-partidos td:first-child { border-radius: 8px 0 0 8px; border-left: 2px solid transparent; }
+        .tabla-partidos tr:hover td:first-child { border-left-color: var(--oro); }
+        .tabla-partidos td:last-child { border-radius: 0 8px 8px 0; text-align: right; color: var(--oro); font-weight: 600; font-family: 'Playfair Display'; white-space: nowrap; }
+        
+        .match-date { display: block; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+
+        .skeleton { height: 60px; background: rgba(255,255,255,0.05); margin-bottom: 10px; border-radius: 8px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 0.3; } 100% { opacity: 0.6; } }
+
+        /* --- RESERVAS --- */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 100%; max-width: 1000px; text-align: left; }
+        
+        .input-wrapper { margin-bottom: 20px; position: relative; width: 100%; }
+        .input-wrapper label { 
+            position: absolute; left: 15px; top: 15px; color: var(--text-muted); font-size: 0.75rem; 
+            transition: 0.3s; pointer-events: none; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .input-wrapper input, .input-wrapper textarea {
+            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            color: var(--text-main); padding: 25px 15px 10px 15px; border-radius: 4px; font-family: inherit;
+            transition: 0.3s; font-size: 1rem;
+        }
+        .input-wrapper input:focus, .input-wrapper textarea:focus { border-color: var(--oro); outline: none; background: rgba(255,255,255,0.08); }
+        .input-wrapper input:focus + label, .input-wrapper input:not(:placeholder-shown) + label,
+        .input-wrapper textarea:focus + label, .input-wrapper textarea:not(:placeholder-shown) + label {
+            top: 8px; font-size: 0.6rem; color: var(--oro);
+        }
+
+        /* --- TOAST & LIGHTBOX --- */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; pointer-events: none; width: 90%; max-width: 400px; display: flex; flex-direction: column; alignItems: center; }
+        .toast {
+            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); border: 1px solid var(--oro);
+            color: var(--text-main); padding: 15px 30px; border-radius: 50px; margin-top: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            opacity: 0; transform: translateY(-20px); transition: 0.4s var(--ease-out);
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.error { border-color: #ff4444; }
+        .toast i { color: var(--oro); }
+
+        #lightbox {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); z-index: 5000;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: 0.4s ease; backdrop-filter: blur(10px);
+        }
+        #lightbox.activo { opacity: 1; visibility: visible; }
+        #lightbox img { 
+            max-width: 90%; max-height: 85vh; border: 1px solid var(--oro); 
+            box-shadow: 0 0 50px rgba(0,0,0,0.8); transform: scale(0.9); transition: 0.4s var(--ease-out); 
+        }
+        #lightbox.activo img { transform: scale(1); }
+        .cerrar-lightbox { 
+            position: absolute; top: 30px; right: 30px; font-size: 2rem; color: var(--text-muted); 
+            cursor: pointer; transition: 0.3s; z-index: 5001;
+        }
+        .cerrar-lightbox:hover { color: var(--oro); transform: rotate(90deg); }
+
+        /* --- MARKESTEIN FOOTER --- */
+        .markestein-footer {
+            width: 100%;
+            padding: 40px 20px 80px 20px;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; animation: fadeInUp 0.8s var(--ease-out) forwards 0.5s; 
+        }
+        .markestein-badge {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 24px; background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 50px;
+            backdrop-filter: blur(10px); transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            text-decoration: none; cursor: pointer;
+        }
+        .markestein-badge:hover {
+            background: rgba(255, 255, 255, 0.08); border-color: var(--oro);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15); transform: translateY(-2px);
+        }
+        .mk-text {
+            font-family: 'Montserrat', sans-serif; font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 2px; color: var(--text-muted); font-weight: 500;
+        }
+        .mk-brand {
+            font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.85rem;
+            background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .markestein-badge:hover .mk-brand { background: var(--oro-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .mk-os { font-size: 0.6rem; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; color: #fff; margin-left: 4px; border: 1px solid rgba(255,255,255,0.1); }
+        .mk-dot { width: 6px; height: 6px; background-color: var(--oro); border-radius: 50%; box-shadow: 0 0 10px var(--oro); animation: pulseDot 2s infinite; }
+        @keyframes pulseDot { 0% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.4; transform: scale(0.9); } }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            header { display: none; }
+            main { padding-bottom: 0; }
+            
+            .mobile-top-bar {
+                position: fixed; top: 0; left: 0; width: 100%; padding: 15px 20px; z-index: 1000;
+                display: flex; justify-content: center; align-items: center;
+                pointer-events: none; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            }
+            .mobile-top-bar * { pointer-events: auto; }
+            .mobile-logo { font-family: 'Playfair Display'; font-weight: 700; color: #fff; font-size: 1.2rem; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+
+            /* ISLA FLOTANTE */
+            .mobile-nav {
+                position: fixed; bottom: calc(25px + env(safe-area-inset-bottom)); /* Respeta Notch */
+                left: 50%; transform: translateX(-50%);
+                width: 90%; max-width: 400px;
+                background: var(--nav-mobile-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+                border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 50px; 
+                padding: 12px 25px; display: flex; justify-content: space-between; align-items: center;
+                z-index: 2000; box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            }
+            .mobile-btn {
+                background: none; border: none; color: var(--text-muted);
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                gap: 0; font-size: 0.6rem; opacity: 0.6; transition: 0.3s; padding: 0 5px;
+            }
+            .mobile-btn i { font-size: 1.2rem; margin-bottom: 2px; transition: 0.3s; }
+            .mobile-btn.activo { color: var(--oro); opacity: 1; }
+            .mobile-btn.activo i { transform: translateY(-3px) scale(1.1); filter: drop-shadow(0 0 5px rgba(212,175,55,0.5)); }
+
+            section { 
+                padding-top: 90px; 
+                padding-bottom: 140px; /* Espacio extra para la isla */
+                padding-left: 15px; padding-right: 15px;
+            }
+            .contenido-hero { margin-top: 5vh; }
+            .galeria-grid { grid-template-columns: 1fr; gap: 20px; }
+            .form-grid { grid-template-columns: 1fr; gap: 0; }
+            .menu-ligas { gap: 8px; }
+            .btn-liga { flex: 1 1 40%; font-size: 0.65rem; padding: 10px; text-align: center; }
+            iframe { height: 200px; }
+            .input-wrapper input, .input-wrapper textarea { font-size: 16px; padding: 20px 15px 10px 15px; } /* iOS zoom fix */
+            .glass-panel { padding: 25px; }
+            
+            .markestein-footer { padding-bottom: 0; }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-nav, .mobile-top-bar { display: none; }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div id="loader">
+        <div class="loader-logo" style="animation: fadeInUp 1s forwards">AContraBarra<span style="font-size:1rem; display:block; text-align:right; font-style:italic;">Centro</span></div>
+        <div class="loader-bar" id="loader-bar"></div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <header>
+        <a href="#" class="logo" onclick="ir('inicio')">AContraBarra <span>Centro</span></a>
+        <nav>
+            <ul>
+                <li><button class="nav-btn activo" onclick="ir('inicio')">Inicio</button></li>
+                <li><button class="nav-btn" onclick="ir('carta')">Carta</button></li>
+                <li><button class="nav-btn" onclick="ir('galeria')">Espacio</button></li>
+                <li><button class="nav-btn" onclick="ir('futbol')">Deportes</button></li>
+                <li><button class="nav-btn" onclick="ir('reservas')">Reservas</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="mobile-top-bar">
+        <div class="mobile-logo">ACB <span>Centro</span></div>
+    </div>
+
+    <div class="mobile-nav">
+        <button class="mobile-btn activo" onclick="ir('inicio')"><i class="fas fa-home"></i></button>
+        <button class="mobile-btn" onclick="ir('carta')"><i class="fas fa-utensils"></i></button>
+        <button class="mobile-btn" onclick="ir('galeria')"><i class="fas fa-camera"></i></button>
+        <button class="mobile-btn" onclick="ir('futbol')"><i class="fas fa-futbol"></i></button>
+        <button class="mobile-btn" onclick="ir('reservas')"><i class="fas fa-calendar-alt"></i></button>
+    </div>
+
+    <div id="lightbox" onclick="cerrarLightbox()">
+        <span class="cerrar-lightbox">×</span>
+        <img id="img-grande" src="" alt="Vista Previa" onclick="event.stopPropagation()">
+    </div>
+
+    <main>
+        
+        <section id="inicio" class="visible">
+            <img src="fachada.jpg" class="img-fondo-absoluta" id="bg-parallax" alt="Interior Restaurante">
+            <div class="contenido-hero stagger-anim d-1">
+                <p style="color:var(--oro); letter-spacing:4px; font-weight:600; margin-bottom:20px; font-size: 0.8rem;">EST. 2025 • BENIDORM</p>
+                <h1>Alma de Barra.<br><span>Corazón Gourmet.</span></h1>
+                <p style="font-size:1.1rem; margin-bottom:50px; color:var(--text-muted); max-width:600px; margin-left:auto; margin-right:auto; font-weight:300; line-height: 1.6;">
+                    Donde la tradición se encuentra con la excelencia culinaria en un ambiente vibrante.
+                </p>
+                <button class="btn-oro" onclick="ir('carta')">Descubrir Experiencia</button>
+            </div>
+            
+            <div class="markestein-footer">
+                <a href="https://markestein.es" target="_blank" class="markestein-badge">
+                    <div class="mk-dot"></div>
+                    <span class="mk-text">Powered by</span>
+                    <span class="mk-brand">Markestein <span class="mk-os">OS</span></span>
+                </a>
+            </div>
+        </section>
+
+        <section id="carta">
+            <div class="stagger-anim d-1">
+                <h2>Nuestra Propuesta</h2>
+                <div class="subtitulo">MERCADO & PRODUCTO</div>
+            </div>
+            
+            <div class="galeria-grid stagger-anim d-2">
+                <div class="card-img" onclick="abrirLightbox('menu1.jpg')">
+                    <img src="menu1.jpg" alt="Carta de Tapas">
+                    <div class="card-overlay"><span class="card-title">Selección de Tapas</span></div>
+                </div>
+                <div class="card-img" onclick="abrirLightbox('menu2.jpg')">
+                    <img src="menu2.jpg" alt="Carta de Vinos">
+                    <div class="card-overlay"><span class="card-title">Bodega & Vinos</span></div>
+                </div>
+            </div>
+            <p style="margin-top:30px; color:var(--text-muted); font-size:0.9rem;" class="stagger-anim d-3">* Productos de temporada sujetos a disponibilidad de mercado.</p>
+            
+            <div class="markestein-footer">
+                <a href="https://markestein.es" target="_blank" class="markestein-badge">
+                    <div class="mk-dot"></div>
+                    <span class="mk-text">Powered by</span>
+                    <span class="mk-brand">Markestein <span class="mk-os">OS</span></span>
+                </a>
+            </div>
+        </section>
+
+        <section id="galeria">
+            <div class="stagger-anim d-1">
+                <h2>El Espacio</h2>
+                <div class="subtitulo">ATMÓSFERA ÚNICA</div>
+            </div>
+            
+            <div class="galeria-grid stagger-anim d-2">
+                <div class="card-img" onclick="abrirLightbox('fachada.jpg')"><img src="fachada.jpg" alt=""><div class="card-overlay"><span class="card-title">La Barra</span></div></div>
+                <div class="card-img" onclick="abrirLightbox('futbol.jpg')"><img src="futbol.jpg" alt=""><div class="card-overlay"><span class="card-title">Lounge</span></div></div>
+                <div class="card-img" onclick="abrirLightbox('burger.jpg')"><img src="burger.jpg" alt=""><div class="card-overlay"><span class="card-title">Gastronomía</span></div></div>
+                <div class="card-img" onclick="abrirLightbox('bolleria.jpg')"><img src="bolleria.jpg" alt=""><div class="card-overlay"><span class="card-title">Cafetería</span></div></div>
+            </div>
+
+            <div class="markestein-footer">
+                <a href="https://markestein.es" target="_blank" class="markestein-badge">
+                    <div class="mk-dot"></div>
+                    <span class="mk-text">Powered by</span>
+                    <span class="mk-brand">Markestein <span class="mk-os">OS</span></span>
+                </a>
+            </div>
+        </section>
+
+        <section id="futbol">
+            <img src="futbol.jpg" class="img-fondo-absoluta" style="filter: blur(20px) brightness(0.4);">
+            <div class="stagger-anim d-1">
+                <h2>Sports Lounge</h2>
+                <div class="subtitulo">PRÓXIMOS ENCUENTROS</div>
+            </div>
+            
+            <div class="glass-panel stagger-anim d-2" style="max-width: 900px; padding: 30px;">
+                <div class="menu-ligas">
+                    <button class="btn-liga seleccionada" onclick="filtrarLiga('esp.1', this)"><i class="fas fa-flag"></i> La Liga</button>
+                    <button class="btn-liga" onclick="filtrarLiga('eng.1', this)"><i class="fas fa-crown"></i> Premier</button>
+                    <button class="btn-liga" onclick="filtrarLiga('uefa.champions', this)"><i class="fas fa-star"></i> Champions</button>
+                    <button class="btn-liga" onclick="filtrarLiga('uefa.europa', this)"><i class="fas fa-globe-europe"></i> Europa</button>
+                </div>
+
+                <div style="min-height: 300px;">
+                    <table class="tabla-partidos">
+                        <tbody id="tabla-body">
+                            </tbody>
+                    </table>
+                </div>
+                <p style="margin-top:20px; font-size:0.7rem; color:var(--text-muted);">* Se muestran los próximos 7 partidos programados.</p>
+            </div>
+
+            <div class="markestein-footer">
+                <a href="https://markestein.es" target="_blank" class="markestein-badge">
+                    <div class="mk-dot"></div>
+                    <span class="mk-text">Powered by</span>
+                    <span class="mk-brand">Markestein <span class="mk-os">OS</span></span>
+                </a>
+            </div>
+        </section>
+
+        <section id="reservas">
+            <div class="stagger-anim d-1">
+                <h2>Reservas</h2>
+                <div class="subtitulo">SU MESA LE ESPERA</div>
+            </div>
+
+            <div class="form-grid stagger-anim d-2">
+                <div class="glass-panel">
+                    <h3 style="color:var(--oro); font-family:'Playfair Display'; margin-bottom:30px; font-size:1.5rem; text-align: center;">Solicitud Online</h3>
+                    <form id="reservaForm" onsubmit="procesarReserva(event)">
+                        <div class="input-wrapper">
+                            <input type="text" id="nombre" name="nombre" placeholder=" " required>
+                            <label>Nombre Completo</label>
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="email" id="email" name="email" placeholder=" " required>
+                            <label>Email de contacto</label>
+                        </div>
+                        <div style="display:flex; gap:20px;">
+                            <div class="input-wrapper" style="flex:1">
+                                <input type="date" id="fecha" name="fecha" required style="color-scheme: dark;">
+                            </div>
+                            <div class="input-wrapper" style="flex:1">
+                                <input type="time" id="hora" name="hora" required style="color-scheme: dark;">
+                            </div>
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="number" id="personas" name="personas" min="1" max="20" value="2" required>
+                            <label>Nº Personas</label>
+                        </div>
+                        <div class="input-wrapper">
+                            <textarea id="comentarios" name="comentarios" rows="3" placeholder=" "></textarea>
+                            <label>¿Alguna petición especial?</label>
+                        </div>
+                        <button type="submit" class="btn-oro" style="width:100%;">Confirmar Solicitud</button>
+                    </form>
+                </div>
+
+                <div class="glass-panel" style="display:flex; flex-direction:column; justify-content:space-between;">
+                    <div>
+                        <h3 style="color:var(--oro); font-family:'Playfair Display'; margin-bottom:20px; text-align: center;">Ubicación</h3>
+                        <div style="position:relative; width:100%; height:250px; border-radius:8px; overflow:hidden; border:1px solid var(--glass-border);">
+                            <iframe 
+                                style="width:100%; height:100%; filter: grayscale(100%) invert(90%); border:0;" 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3126.5413000000005!2d-0.127758!3d38.541097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd62052f5c7b6d1b%3A0x6b8f1b1b1b1b1b1b!2sBenidorm%2C%20Alicante!5e0!3m2!1ses!2ses!4v1620000000000!5m2!1ses!2ses" 
+                                allowfullscreen="" loading="lazy">
+                            </iframe>
+                        </div>
+                        <div style="margin-top:30px; line-height:1.8; color:var(--text-muted); text-align:center;">
+                            <p><strong style="color:var(--text-main);">ACONTRABARRA CENTRO</strong></p>
+                            <p>Edif. Fuster Aitana, P.º de la Castellana, 47<br>03502 Benidorm, Alicante</p>
+                        </div>
+                    </div>
+                    <div style="margin-top:30px; border-top:1px solid var(--glass-border); padding-top:20px; text-align:center;">
+                        <p style="font-size:0.9rem; margin-bottom:10px;"><i class="fas fa-phone-alt" style="color:var(--oro); margin-right:10px;"></i> +34 965 00 00 00</p>
+                        <p style="font-size:0.9rem;"><i class="fas fa-envelope" style="color:var(--oro); margin-right:10px;"></i> acontrabarra@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="markestein-footer">
+                <a href="https://markestein.es" target="_blank" class="markestein-badge">
+                    <div class="mk-dot"></div>
+                    <span class="mk-text">Powered by</span>
+                    <span class="mk-brand">Markestein <span class="mk-os">OS</span></span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- SISTEMA DE ARRANQUE ---
+        window.onload = () => {
+            const bar = document.getElementById('loader-bar');
+            bar.style.width = '100%';
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+                document.addEventListener('mousemove', (e) => {
+                    const x = (window.innerWidth - e.pageX) / 90;
+                    const y = (window.innerHeight - e.pageY) / 90;
+                    const bg = document.getElementById('bg-parallax');
+                    if(bg) bg.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
+                });
+            }, 800);
+        };
+
+        // --- NAVEGACIÓN ---
+        function ir(id) {
+            document.querySelectorAll('section').forEach(s => {
+                s.classList.remove('visible');
+                // Reiniciar animaciones
+                s.querySelectorAll('.stagger-anim').forEach(el => {
+                    el.style.animation = 'none';
+                    el.offsetHeight; /* Trigger reflow */
+                    el.style.animation = null; 
+                });
+            });
+            document.getElementById(id).classList.add('visible');
+            
+            // Actualizar botones activos
+            const allBtns = document.querySelectorAll('.nav-btn, .mobile-btn');
+            allBtns.forEach(btn => btn.classList.remove('activo'));
+            allBtns.forEach(btn => {
+                if(btn.getAttribute('onclick').includes(id)) btn.classList.add('activo');
+            });
+
+            if(id === 'futbol') cargarAgenda();
+        }
+
+        // --- LIGHTBOX ---
+        function abrirLightbox(src) {
+            document.getElementById('img-grande').src = src;
+            document.getElementById('lightbox').classList.add('activo');
+        }
+        function cerrarLightbox() { document.getElementById('lightbox').classList.remove('activo'); }
+
+        // --- TOAST NOTIFICATIONS ---
+        function showToast(msg, isError = false) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (isError ? ' error' : '');
+            toast.innerHTML = `<i class="${isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle'}"></i> <span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 4000);
+        }
+
+        // --- RESERVA (FORMSPREE) ---
+        async function procesarReserva(e) {
+            e.preventDefault();
+            const form = document.getElementById('reservaForm');
+            const btn = form.querySelector('button');
+            const originalText = btn.innerText;
+
+            btn.innerText = "Enviando...";
+            btn.style.opacity = "0.7";
+            btn.disabled = true;
+
+            const data = new FormData(form);
+
+            try {
+                const response = await fetch("https://formspree.io/f/mjkanwbb", {
+                    method: "POST", body: data, headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    showToast("¡Solicitud enviada correctamente!");
+                    form.reset();
+                    btn.innerText = "¡Enviado!";
+                } else {
+                    showToast("Error al enviar. Intente de nuevo.", true);
+                    btn.innerText = "Error";
+                }
+            } catch (error) {
+                showToast("Error de conexión.", true);
+                btn.innerText = "Reintentar";
+            }
+
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.opacity = "1";
+                btn.disabled = false;
+            }, 3000);
+        }
+
+        // --- API FÚTBOL (ESPN - NEXT 7) ---
+        let cachePartidos = {}; 
+
+        function getDateString(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}${m}${d}`;
+        }
+
+        async function cargarAgenda() {
+            if(!cachePartidos['esp.1']) { await filtrarLiga('esp.1'); }
+        }
+
+        async function filtrarLiga(ligaId, btn) {
+            if(btn) {
+                document.querySelectorAll('.btn-liga').forEach(b => b.classList.remove('seleccionada'));
+                btn.classList.add('seleccionada');
+            }
+
+            const tbody = document.getElementById('tabla-body');
+            
+            if (cachePartidos[ligaId]) {
+                renderizarPartidos(cachePartidos[ligaId]);
+                return;
+            }
+
+            tbody.innerHTML = '<tr><td colspan="2"><div class="skeleton"></div><div class="skeleton"></div></td></tr>';
+
+            const hoy = new Date();
+            const futuro = new Date();
+            futuro.setDate(hoy.getDate() + 30);
+            const dateStr = `${getDateString(hoy)}-${getDateString(futuro)}`;
+
+            try {
+                const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/${ligaId}/scoreboard?dates=${dateStr}`);
+                const data = await res.json();
+                
+                let partidos = [];
+                if(data.events) {
+                    partidos = data.events.map(evento => {
+                        const estado = evento.status.type.state;
+                        const fechaObj = new Date(evento.date);
+                        const competitors = evento.competitions[0].competitors;
+                        const home = competitors.find(c => c.homeAway === 'home').team.displayName;
+                        const away = competitors.find(c => c.homeAway === 'away').team.displayName;
+                        
+                        let score = 'vs';
+                        if (estado === 'post' || estado === 'in') {
+                             score = `${competitors.find(c => c.homeAway === 'home').score} - ${competitors.find(c => c.homeAway === 'away').score}`;
+                        }
+
+                        return {
+                            local: home,
+                            visitante: away,
+                            fechaTexto: fechaObj.toLocaleDateString('es-ES', {weekday: 'short', day: 'numeric', month: 'short'}),
+                            hora: fechaObj.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'}),
+                            estado: estado,
+                            marcador: score
+                        };
+                    });
+                }
+                
+                const proximos7 = partidos.slice(0, 7);
+                cachePartidos[ligaId] = proximos7;
+                renderizarPartidos(proximos7);
+
+            } catch (error) {
+                console.error("Error API", error);
+                tbody.innerHTML = '<tr><td colspan="2" style="padding:30px; text-align:center; color:var(--text-muted);">Sin partidos programados próximos.</td></tr>';
+            }
+        }
+
+        function renderizarPartidos(lista) {
+            const tbody = document.getElementById('tabla-body');
+            tbody.style.opacity = '0';
+            
+            setTimeout(() => {
+                tbody.innerHTML = '';
+                if(lista.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:40px; color:var(--text-muted);">No hay partidos próximos.</td></tr>';
+                } else {
+                    lista.forEach((p, index) => {
+                        const row = document.createElement('tr');
+                        row.style.animation = `fadeInUp 0.3s ease forwards ${index * 0.1}s`;
+                        row.style.opacity = '0';
+                        
+                        let infoDerecha = p.hora;
+                        let colorDerecha = 'var(--oro)';
+                        
+                        if(p.estado === 'in') {
+                            infoDerecha = `<span style="color:#e74c3c; font-weight:bold; animation:pulse 1s infinite">LIVE</span> ${p.marcador}`;
+                        } else if (p.estado === 'post') {
+                            infoDerecha = p.marcador;
+                            colorDerecha = 'var(--text-muted)';
+                        }
+
+                        row.innerHTML = `
+                            <td>
+                                <span class="match-date">${p.fechaTexto}</span>
+                                <div style="display:flex; flex-direction: column; gap: 4px;">
+                                    <div style="font-weight:600; font-size:0.9rem;">${p.local}</div>
+                                    <div style="font-weight:600; font-size:0.9rem;">${p.visitante}</div>
+                                </div>
+                            </td>
+                            <td style="color:${colorDerecha}; text-align:right;">${infoDerecha}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+                tbody.style.opacity = '1';
+            }, 200);
+        }
+    </script>
+</body>
+</html>
